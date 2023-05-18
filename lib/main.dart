@@ -19,12 +19,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -96,32 +98,31 @@ class _MyHomePageState extends State<MyHomePage> {
                       Text(
                         _answerCorrect ? 'Gut gemacht' : 'Falsch',
                       ),
-                    QuestionWidget(
-                        onChangeAnswer: setSelectedAnswer,
-                        answer: _currentQuestion().answer,
-                        number: _currentQuestion().number,
-                        text: _currentQuestion().text,
-                        options: _currentQuestion().options,
-                        link: _currentQuestion().link,
-                        showIncorrect:
-                            _answers![_currentQuestionIndex] != null),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        if (_currentQuestionIndex > 0)
-                          ElevatedButton(
-                              onPressed: answerQuestion,
-                              child: const Text('Previous')),
-                        ElevatedButton(
-                            onPressed: answerQuestion,
-                            child: const Text('Check')),
-                        if (_answers![_currentQuestionIndex] != null &&
-                            _currentQuestionIndex < _questions!.length)
-                          ElevatedButton(
-                              onPressed: nextQuestion,
-                              child: const Text('Weiter'))
-                      ],
-                    )
+                    // QuestionWidget(
+                    //     onChangeAnswer: setSelectedAnswer,
+                    //     answer: _currentQuestion().answer,
+                    //     number: _currentQuestion().number,
+                    //     text: _currentQuestion().text,
+                    //     options: _currentQuestion().options,
+                    //     link: _currentQuestion().link,
+                    //     showIncorrect:
+                    //         _answers![_currentQuestionIndex] != null),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     if (_currentQuestionIndex > 0)
+                    //       ElevatedButton(
+                    //           onPressed: answerQuestion,
+                    //           child: const Text('Previous')),
+                    //     ElevatedButton(
+                    //         onPressed: answerQuestion,
+                    //         child: const Text('Check')),
+                    //     if (_answers![_currentQuestionIndex] != null &&
+                    //         _currentQuestionIndex < _questions!.length)
+                    //       ElevatedButton(
+                    //           onPressed: nextQuestion,
+                    //           child: const Text('Weiter'))
+                    //   ],
                   ],
                 )),
     );

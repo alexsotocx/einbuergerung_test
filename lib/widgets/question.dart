@@ -1,23 +1,18 @@
+import 'package:einbuergerung_test/models/question.dart';
 import 'package:flutter/material.dart';
 
 class QuestionWidget extends StatefulWidget {
-  final String text;
-  final String? link;
-  final String answer;
-  final int number;
-  final bool showIncorrect;
-  final void Function(String answer) onChangeAnswer;
-  final List<String> options;
+  final Question question;
+  final void Function() onNext;
+  final void Function(bool correct) onSelectAnswer;
+  final void Function() onPrevious;
 
   const QuestionWidget({
     super.key,
-    required this.text,
-    this.link,
-    required this.answer,
-    required this.options,
-    required this.number,
-    required this.showIncorrect,
-    required this.onChangeAnswer,
+    required this.question,
+    required this.onSelectAnswer,
+    required this.onNext,
+    required this.onPrevious,
   });
 
   @override
@@ -28,6 +23,7 @@ class QuestionWidget extends StatefulWidget {
 
 class _QuestionWidgetState extends State<QuestionWidget> {
   String? _selectedAnswer;
+  bool _answered = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,49 +31,45 @@ class _QuestionWidgetState extends State<QuestionWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Question ${widget.number}: ${widget.text}',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 16),
-          if (widget.link != null)
-            InkWell(
-              child: Text(
-                widget.link!,
-                style: const TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-              onTap: () {
-                // Open link
-              },
-            ),
-          const SizedBox(height: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ...widget.options.map((ans) {
-                return RadioListTile(
-                    title: Text(
-                      ans,
-                      style: TextStyle(
-                          color: widget.showIncorrect && ans != widget.answer
-                              ? Colors.red
-                              : Colors.black),
-                    ),
-                    value: ans,
-                    groupValue: _selectedAnswer,
-                    onChanged: (value) {
-                      widget.onChangeAnswer(value!);
-                      setState(() {
-                        _selectedAnswer = value;
-                      });
-                    });
+              Text(widget.question.text),
+              const SizedBox(height: 16),
+              ...widget.question.options.map((questionOption) {
+                return RadioListTile<String>(
+                  key: Key(questionOption),
+                  title: Text(
+                    questionOption,
+                  ),
+                  value: questionOption,
+                  groupValue: _selectedAnswer,
+                  onChanged: _answered
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _selectedAnswer = value;
+                          });
+                        },
+                );
               }),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: _answered
+                          ? null
+                          : () {
+                              setState(() {
+                                _answered = true;
+                              });
+                              widget.onSelectAnswer(
+                                  widget.question.answer == _selectedAnswer);
+                            },
+                      child: const Text('Check'))
+                ],
+              )
             ],
           ),
         ],
