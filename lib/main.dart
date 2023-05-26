@@ -1,6 +1,7 @@
 import 'package:einbuergerung_test/models/question.dart';
 import 'package:einbuergerung_test/utils/read_json.dart';
 import 'package:einbuergerung_test/widgets/question.dart';
+import 'package:einbuergerung_test/widgets/questionary.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,9 +33,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Question>? _questions;
-  int _currentQuestionIndex = 0;
-  List<String?>? _userAnswers;
-  List<bool>? _answerCorrect;
 
   @override
   void initState() {
@@ -45,14 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
             .map((e) => Question.fromJson(e))
             .toList();
         _questions!.shuffle();
-        _userAnswers = List.filled(_questions!.length, null);
-        _answerCorrect = List.filled(_questions!.length, false);
       });
     });
-  }
-
-  Question _currentQuestion() {
-    return _questions![_currentQuestionIndex];
   }
 
   @override
@@ -66,26 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ? const CircularProgressIndicator()
               : Column(
                   children: [
-                    QuestionWidget(
-                      key: Key('question_${_currentQuestion().number}'),
-                      question: _currentQuestion(),
-                      initialAnswer: _userAnswers![_currentQuestionIndex],
-                      onSelectAnswer: (correct, answer) => setState(() {
-                        _userAnswers![_currentQuestionIndex] = answer;
-                        _answerCorrect![_currentQuestionIndex] = correct;
-                      }),
-                      onNext: _currentQuestionIndex < _questions!.length
-                          ? () => setState(() {
-                                _currentQuestionIndex =
-                                    _currentQuestionIndex + 1;
-                              })
-                          : null,
-                      onPrevious: _currentQuestionIndex > 0
-                          ? () => setState(() {
-                                _currentQuestionIndex =
-                                    _currentQuestionIndex - 1;
-                              })
-                          : null,
+                    QuestionaryWidget(
+                      questions: _questions!,
                     )
                   ],
                 )),
