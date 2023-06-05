@@ -85,6 +85,7 @@ class _QuestionaryWidgetState extends State<QuestionaryWidget> {
       ),
       QuestionaryNavigator(
           answerCorrect: _answerCorrect!,
+          currentQuestionIndex: _currentQuestionIndex,
           onPress: (q) => setState(() {
                 _currentQuestionIndex = q;
               }))
