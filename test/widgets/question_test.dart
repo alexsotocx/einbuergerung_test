@@ -5,26 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mockito/mockito.dart';
 
+import '../utils.dart';
+
 class _MockFunctions extends Mock {
   void onNext();
   void onSelectAnswer(bool correct, String answer);
   void onPrevious();
 }
 
-Widget createTestWidget(List<Widget> widgets) {
-  return MaterialApp(
-    home: Scaffold(body: Column(children: widgets)),
-  );
-}
-
-Finder findButtonByText(String text) {
-  return find.byWidgetPredicate(
-    (widget) =>
-        widget is ElevatedButton &&
-        widget.child is Text &&
-        (widget.child as Text).data == text,
-  );
-}
 
 void main() {
   var question = Question(
