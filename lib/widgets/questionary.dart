@@ -38,9 +38,12 @@ class _QuestionaryWidgetState extends State<QuestionaryWidget> {
 
   Future<void> updateQuestion(bool correct) async {
     final currentQ = _currentQuestion();
-    final currentAnswer = await widget.repository
-        .getAllAnswered()
-        .then((value) => value[currentQ.number]);
+    final currentAnswer = await widget.repository.getAllAnswered().then(
+          (value) => value.firstWhere(
+            (element) => element?.questionId == currentQ.number,
+            orElse: () => null,
+          ),
+        );
     if (currentAnswer == null) {
       await widget.repository.setAnsweredQuestion(AnsweredQuestion(
           questionId: currentQ.number,

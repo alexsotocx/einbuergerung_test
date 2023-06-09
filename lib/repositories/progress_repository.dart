@@ -53,7 +53,7 @@ class SqlProgressRepository extends IProgressRepository {
     await dbClient.insert(
         'answers',
         {
-          'lastTimeCorrect': q.lastTimeCorrect,
+          'lastTimeCorrect': q.lastTimeCorrect ? 1 : 0,
           'questionId': q.questionId,
           'timesCorrect': q.timesCorrect,
           'timesIncorrect': q.timesIncorrect,
