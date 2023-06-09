@@ -5,5 +5,5 @@ import 'app.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  AppBuilder().build(RepositoryType.memory).then((app) => runApp(app));
+  AppBuilder().build(RepositoryType.sql).then((app) => runApp(app));
 }

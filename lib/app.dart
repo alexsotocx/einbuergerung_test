@@ -1,6 +1,8 @@
 import 'package:einbuergerung_test/repositories/progress_repository.dart';
 import 'package:einbuergerung_test/utils/read_json.dart';
 import 'package:einbuergerung_test/widgets/app.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'models/question.dart';
 
@@ -17,7 +19,7 @@ class AppBuilder {
     });
 
     if (repositoryType == RepositoryType.sql) {
-      dependencies['question_answered_repo'] = null;
+      await _initializeSqlRepo();
     } else {
       dependencies['question_answered_repo'] =
           MemoryProgressRepoistory.withEmpty(questions.length);
@@ -29,6 +31,26 @@ class AppBuilder {
       questions: questions,
       repository: repo,
     );
+  }
+
+  Future<void> _initializeSqlRepo() async {
+    final database = await openDatabase(
+      join(await getDatabasesPath(), 'answers.db'),
+      onCreate: (db, version) {
+        return db.execute('''
+            CREATE TABLE answers(
+              questionId INTEGER PRIMARY KEY,
+              lastTimeCorrect INTEGER,
+              timesCorrect INTEGER,
+              timesIncorrect INTEGER
+            )
+          ''');
+      },
+      version: 1,
+    );
+
+    dependencies['question_answered_repo'] =
+        SqlProgressRepository(dbClient: database);
   }
 
   T _getDependency<T>(String key) {
