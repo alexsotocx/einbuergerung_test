@@ -27,8 +27,17 @@ class AppBuilder {
 
     final repo = _getDependency<IProgressRepository>('question_answered_repo');
 
+    final answeredQuestions = await repo.getAllAnswered();
+    final notAnsweredQuestions = questions.where((q) {
+      return answeredQuestions.firstWhere(
+            (qa) => qa!.questionId == q.number && qa.lastTimeCorrect,
+            orElse: () => null,
+          ) ==
+          null;
+    }).toList();
+
     return MyApp(
-      questions: questions,
+      questions: notAnsweredQuestions,
       repository: repo,
     );
   }

@@ -21,6 +21,7 @@ class QuestionaryNavigator extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: ListView.builder(
+        itemCount: answerCorrect.length,
         itemBuilder: (context, i) => TextButton(
           key: Key("nav$i"),
           onPressed: i == currentQuestionIndex ? null : () => onPress(i),
