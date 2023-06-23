@@ -1,10 +1,10 @@
-class AnsweredQuestion {
+class AnsweredQuestionResult {
   final int questionId;
   final bool lastTimeCorrect;
   final int timesCorrect;
   final int timesIncorrect;
 
-  AnsweredQuestion({
+  AnsweredQuestionResult({
     required this.questionId,
     required this.lastTimeCorrect,
     required this.timesCorrect,

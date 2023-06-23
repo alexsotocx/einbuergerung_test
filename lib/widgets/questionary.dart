@@ -3,6 +3,7 @@ import 'package:einbuergerung_test/models/question.dart';
 import 'package:einbuergerung_test/repositories/progress_repository.dart';
 import 'package:einbuergerung_test/widgets/nagivation.dart';
 import 'package:einbuergerung_test/widgets/question.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class QuestionaryWidget extends StatefulWidget {
@@ -38,20 +39,18 @@ class _QuestionaryWidgetState extends State<QuestionaryWidget> {
 
   Future<void> updateQuestion(bool correct) async {
     final currentQ = _currentQuestion();
-    final currentAnswer = await widget.repository.getAllAnswered().then(
-          (value) => value.firstWhere(
-            (element) => element?.questionId == currentQ.number,
-            orElse: () => null,
-          ),
-        );
+    final allAnswers = await widget.repository.getAllAnswered();
+    final AnsweredQuestionResult? currentAnswer = allAnswers.firstWhereOrNull(
+      (element) => element.questionId == currentQ.number,
+    );
     if (currentAnswer == null) {
-      await widget.repository.setAnsweredQuestion(AnsweredQuestion(
+      await widget.repository.setAnsweredQuestion(AnsweredQuestionResult(
           questionId: currentQ.number,
           lastTimeCorrect: correct,
           timesCorrect: correct ? 1 : 0,
           timesIncorrect: correct ? 0 : 1));
     } else {
-      await widget.repository.setAnsweredQuestion(AnsweredQuestion(
+      await widget.repository.setAnsweredQuestion(AnsweredQuestionResult(
           questionId: currentQ.number,
           lastTimeCorrect: correct,
           timesCorrect: correct
@@ -87,11 +86,18 @@ class _QuestionaryWidgetState extends State<QuestionaryWidget> {
             : null,
       ),
       QuestionaryNavigator(
-          answerCorrect: _answerCorrect!,
-          currentQuestionIndex: _currentQuestionIndex,
-          onPress: (q) => setState(() {
-                _currentQuestionIndex = q;
-              }))
+        answerCorrect: _answerCorrect!,
+        currentQuestionIndex: _currentQuestionIndex,
+        onPress: (q) => setState(() {
+          _currentQuestionIndex = q;
+        }),
+      ),
+      const SizedBox(height: 16),
+      Text(
+          'Richtig ${_answerCorrect!.where((element) => element == true).length} / Total ${widget.questions.length}'),
+      const SizedBox(height: 16),
+      Text(
+          'Falsch ${_answerCorrect!.where((element) => element == false).length} / Total ${widget.questions.length}'),
     ]);
   }
 }

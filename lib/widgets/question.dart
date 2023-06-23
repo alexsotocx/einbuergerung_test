@@ -51,7 +51,9 @@ class _QuestionWidgetState extends State<QuestionWidget> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.question.text),
+              SelectableText(
+                widget.question.text,
+              ),
               const SizedBox(height: 16),
               ...widget.question.options.map((questionOption) {
                 return RadioListTile<String>(
